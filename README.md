@@ -1,3 +1,24 @@
+## To run
+
+- To test index.html simply open it in a web browser
+- To test views/pizza.html simply open it in a web browser
+
+## Optimizations Performed:
+
+### Optimizations to achieve 90 pagespeed score on index.html
+
+- Compressed img/profilepic.jpg
+- Compressed views/images/pizzaria.jpg
+- Inlined style.css
+- Made print.css only load when printing
+- Made analytics.js load asynchronously
+- Changed font from Open Sans to Arial to avoid downloading font
+
+### Optimizations to achieve 60 fps on pizza.html
+
+-
+
+
 ## Website Performance Optimization portfolio project
 
 Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
