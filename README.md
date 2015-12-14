@@ -1,7 +1,7 @@
 ## To run
 
-- To test index.html simply open it in a web browser
-- To test views/pizza.html simply open it in a web browser
+- To view index.html simply open it in a web browser
+- To view views/pizza.html simply open it in a web browser
 
 ## Optimizations Performed:
 
