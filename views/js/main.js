@@ -142,6 +142,8 @@ pizzaIngredients.crusts = [
   "Stuffed Crust"
 ];
 
+var isScrolling = false;
+
 // Name generator pulled from http://saturdaykid.com/usernames/generator.html
 // Capitalizes first letter of each word
 String.prototype.capitalize = function() {
@@ -448,14 +450,27 @@ var resizePizzas = function(size) {
     return dx;
   }
 
-  // Iterates through pizza elements on the page and changes their widths
-  function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    // Iterates through pizza elements on the page and changes their widths
+    function changePizzaSizes(size) {
+        var newWidth;
+        // Determine new width percentage once
+        switch (size) {
+            case '1':
+                newWidth = 25;
+                break;
+            case '2':
+                newWidth = 33.3;
+                break;
+            case '3':
+                newWidth = 50;
+                break; 
+        }
+        var randomPizzas = document.querySelectorAll(".randomPizzaContainer");
+        for (var i = 0; i < randomPizzas.length; i++) {
+            // Set new width as a percentage for each pizza
+            randomPizzas[i].style.width = newWidth + '%';
+        }
     }
-  }
 
   changePizzaSizes(size);
 
@@ -499,33 +514,48 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
-  frame++;
-  window.performance.mark("mark_start_frame");
+    if (isScrolling) {
+        isScrolling = false;
+        
+        frame++;
+        window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
+        var items = document.querySelectorAll('.mover');
+        // Only check scrollTop once instead of for each item
+        var scrollTop = document.body.scrollTop;
+        for (var i = 0; i < items.length; i++) {
+            //var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+            var phase = Math.sin((scrollTop / 1250) + (i % 5));
+            items[i].style.left= items[i].basicLeft + 100 * phase + 'px';
+            //items[i].style.transform = 'translateX(' + items[i].basicLeft + 100 * phase + 'px)';
+        }
 
-  // User Timing API to the rescue again. Seriously, it's worth learning.
-  // Super easy to create custom metrics.
-  window.performance.mark("mark_end_frame");
-  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  if (frame % 10 === 0) {
-    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
-    logAverageFrame(timesToUpdatePosition);
-  }
+        // User Timing API to the rescue again. Seriously, it's worth learning.
+        // Super easy to create custom metrics.
+        window.performance.mark("mark_end_frame");
+        window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+        if (frame % 10 === 0) {
+            var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+            logAverageFrame(timesToUpdatePosition);
+        }
+    }
+    requestAnimationFrame(updatePositions);
+}
+requestAnimationFrame(updatePositions);
+
+function updateIsScrolling() {
+    isScrolling = true;
 }
 
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+window.addEventListener('scroll', updateIsScrolling);
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  // Reduced number of pizzas from 200 to 40 since the rest of the pizzas are not visible below the window.
+  for (var i = 0; i < 40; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";

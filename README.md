@@ -5,7 +5,7 @@
 
 ## Optimizations Performed:
 
-### Optimizations to achieve 90 pagespeed score on index.html
+#### Optimizations to achieve 90 pagespeed score on index.html
 
 - Compressed img/profilepic.jpg
 - Compressed views/images/pizzaria.jpg
@@ -14,9 +14,15 @@
 - Made analytics.js load asynchronously
 - Changed font from Open Sans to Arial to avoid downloading font
 
-### Optimizations to achieve 60 fps on pizza.html
+#### Optimizations to achieve 60 fps when scrolling on pizza.html
 
--
+- In style.css, add will-change: transform to .mover class
+- Only get the value for scrollTop once
+- Call updatePositions from requestAnimationFrame instead of onScroll event to make sure it runs at the beginning of every frame.
+
+#### Optimizations to achieve resize pizzas faster than 5 ms
+
+- In changePizzaSizes, determine percentage width of the new pizzas once and set them as percentage rather than pixels.
 
 
 ## Website Performance Optimization portfolio project
